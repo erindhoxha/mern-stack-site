@@ -7,8 +7,10 @@ const dbURI = config.get('mongoURI');
 
 const connectDB = async () => {
     try {
-        console.log("THIS IS THE DB URI", dbURI);
-        await mongoose.connect(dbURI)
+        // added useNewUrlParser just in case, older versions to support
+        await mongoose.connect(dbURI, {
+            useNewUrlParser: true
+        })
         console.log("MongoDB connected...");
     } catch (err) {
         console.log(err.message);

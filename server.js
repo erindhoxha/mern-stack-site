@@ -10,6 +10,12 @@ app.get('/', (req, res) => {
     res.send('API running');
 })
 
+// Define Routes
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/posts', require('./routes/api/posts'));
+
 // AFTER NPM RUN SERVER (NODEMON SERVER):
 // GO TO POSTMAN, RUN GET AT http://localhost:5000 AND YOU'LL SEE THE "API RUNNING"
 // maybe you forgot why? because app.get() it's creating a handler
