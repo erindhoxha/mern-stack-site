@@ -3,26 +3,31 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ProfileSchema = new Schema({
-    name: {
-        type: String,
-        required: true
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    avatar: {
+    company: {
         type: String,
     },
-    date: {
-        type: Date,
-        default: Date.now
+    website: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
+    status: {
+        type: String,
+    },
+    skills: {
+        type: [String],
+    },
+    bio: {
+        type: String,
+    },
+    githubusername: {
+        type: String,
     }
 });
 
-module.exports = Profile = mongoose.model('user', ProfileSchema);
+module.exports = Profile = mongoose.model('profile', ProfileSchema);
