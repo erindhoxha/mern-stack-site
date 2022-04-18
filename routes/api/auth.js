@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const User = require('../../models/User');
 
 // @route       GET api/auth
 // @desc        Test route
 // @access      Public
-router.get('/', auth, (req, res) => {
-    res.send('Auth route...!');
+router.get('/', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        console.log(req);
+        res.json(user);
+    } catch (err) {
+        res.status(401).json({ "msg": "Token is not valid" });
+    }
 })
 
 module.exports = router;
