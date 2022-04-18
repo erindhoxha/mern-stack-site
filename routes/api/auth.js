@@ -12,6 +12,7 @@ router.get('/', auth, async (req, res) => {
         console.log(req);
         res.json(user);
     } catch (err) {
+        console.error(err.message);
         res.status(401).json({ "msg": "Token is not valid" });
     }
 })
