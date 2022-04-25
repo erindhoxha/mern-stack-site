@@ -92,6 +92,10 @@ router.get('/all', async (req, res) => {
     
         res.send(profileMap);  
       });
+    // This is the way to get the profiles without the ID as an obj
+    // Profile.find({}).then(function (profiles) {
+    //     res.send(profiles);
+    // });
 });
 
 module.exports = router;
