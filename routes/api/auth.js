@@ -10,7 +10,7 @@ const config = require('config');
 // @route       GET api/auth
 // @desc        Test route
 // @access      Public
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
         res.json(user);
@@ -34,7 +34,8 @@ router.post('/',
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { email, password } = req.body;
+        const password = req.body.password;
+        const email = req.body.email;
 
         try {
             // Check if user exists
@@ -43,7 +44,6 @@ router.post('/',
                 return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] })
             }
 
-            console.log(user);
 
             const isMatch = await bcrypt.compare(password, user.password);
 
