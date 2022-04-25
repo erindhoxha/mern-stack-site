@@ -9,7 +9,7 @@ const connectDB = async () => {
     try {
         // added useNewUrlParser just in case, older versions to support
         await mongoose.connect(mongoURI, {
-            useNewUrlParser: true
+            useNewUrlParser: true,
         })
         console.log("MongoDB connected...");
     } catch (err) {

@@ -97,5 +97,18 @@ router.get('/all', async (req, res) => {
     //     res.send(profiles);
     // });
 });
+// @route       GET api/profile/id
+// @desc        Get a profile by ID
+// @access      Public
+router.get('/:uid', async (req, res) => {
+    try {
+        const profile = await Profile.findById(req.params.uid);
+        res.send(profile);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send("Server error");
+    }
+});
 
 module.exports = router;
