@@ -9,6 +9,7 @@ const { body, validationResult } = require('express-validator');
 // @desc        Get current users profile
 // @access      Private
 router.get('/me', auth, async (req, res) => {
+    console.log(req);
     try {
         const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'avatar'])
         if (!profile) {
@@ -30,6 +31,7 @@ router.post('/', [auth, [
     body('skills').not().isEmpty(),
 ]], async (req, res) => {
     const errors = validationResult(req);
+    console.log(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
@@ -66,7 +68,7 @@ router.post('/', [auth, [
 
         // create a new profile
         profile = new Profile(profileFields);
-        await profile.bulkSave();
+        await profile.save();
         res.json(profile);
 
     } catch (err) {
@@ -74,6 +76,22 @@ router.post('/', [auth, [
         res.status(500).send("Server error");
     }
 
+});
+
+
+// @route       GET api/profile/all
+// @desc        Get all profiles
+// @access      Public
+router.get('/all', async (req, res) => {
+    Profile.find({}, function(err, profiles) {
+        var profileMap = {};
+    
+        profiles.forEach(function(profile) {
+          profileMap[profile._id] = profile;
+        });
+    
+        res.send(profileMap);  
+      });
 });
 
 module.exports = router;
