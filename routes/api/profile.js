@@ -103,9 +103,6 @@ router.get('/all', async (req, res) => {
     //     res.send(profileMap);  
     //   });
 
-
-
-
     // This is the way to get the profiles without the ID as an obj
     // Profile.find({}).then(function (profiles) {
     //     res.send(profiles);
@@ -118,12 +115,12 @@ router.get('/all', async (req, res) => {
 // @access      Public
 router.get('/:uid', async (req, res) => {
     try {
-        const profile = await Profile.findById(req.params.uid);
+        const profile = await Profile.findById(req.params.uid).populate('user', ['name', 'avatar']);
         res.send(profile);
     }
     catch (err) {
         console.log(err);
-        res.status(500).send("Server error");
+        res.status(400).json({msg: 'There is no profile for this user.'})
     }
 });
 
