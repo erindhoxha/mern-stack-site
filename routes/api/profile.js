@@ -83,20 +83,36 @@ router.post('/', [auth, [
 // @desc        Get all profiles
 // @access      Public
 router.get('/all', async (req, res) => {
-    Profile.find({}, function(err, profiles) {
-        var profileMap = {};
+
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        res.json(profiles);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+
+    // This is the way to get all profiles without the user populated
+    // Profile.find({}, function(err, profiles) {
+    //     var profileMap = {};
     
-        profiles.forEach(function(profile) {
-          profileMap[profile._id] = profile;
-        });
+    //     profiles.forEach(function(profile) {
+    //       profileMap[profile._id] = profile;
+    //     });
     
-        res.send(profileMap);  
-      });
+    //     res.send(profileMap);  
+    //   });
+
+
+
+
     // This is the way to get the profiles without the ID as an obj
     // Profile.find({}).then(function (profiles) {
     //     res.send(profiles);
     // });
 });
+
+
 // @route       GET api/profile/id
 // @desc        Get a profile by ID
 // @access      Public
