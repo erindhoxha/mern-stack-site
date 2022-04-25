@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 // GET CONFIG
 const config = require('config');
 // GET DB FROM MONGODB
-const dbURI = config.get('mongoURI');
+const mongoURI = config.get('mongoURI');
 
 const connectDB = async () => {
     try {
         // added useNewUrlParser just in case, older versions to support
-        await mongoose.connect(dbURI, {
+        await mongoose.connect(mongoURI, {
             useNewUrlParser: true
         })
         console.log("MongoDB connected...");
