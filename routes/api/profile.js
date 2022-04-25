@@ -91,7 +91,7 @@ router.get('/all', async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
-
+    // test
     // This is the way to get all profiles without the user populated
     // Profile.find({}, function(err, profiles) {
     //     var profileMap = {};
