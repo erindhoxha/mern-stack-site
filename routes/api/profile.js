@@ -128,6 +128,11 @@ router.get('/:uid', async (req, res) => {
     }
 });
 
+
+
+// @route       DELETE api/profile/id
+// @desc        DELETE a profile by ID
+// @access      Private and Public
 router.delete('/', auth, async (req, res) => {
 
     try {
@@ -162,5 +167,12 @@ router.delete('/', auth, async (req, res) => {
     //     res.status(400).json({msg: 'There is no profile with this ID.'})
     // }
   })
+
+// @route       update api/profile/id
+// @desc        update a profile by ID / add profile experience
+// @access      Private
+router.put('/', (req, res) => {
+    res.send("We will update the profile here.!!");
+})
 
 module.exports = router;
