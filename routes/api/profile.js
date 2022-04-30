@@ -9,7 +9,6 @@ const { body, validationResult } = require('express-validator');
 // @desc        Get current users profile
 // @access      Private
 router.get('/me', auth, async (req, res) => {
-    console.log(req);
     try {
         const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'avatar'])
         if (!profile) {
@@ -129,24 +128,39 @@ router.get('/:uid', async (req, res) => {
     }
 });
 
-router.delete('/:uid', async (req, res) => {
+router.delete('/', auth, async (req, res) => {
+
     try {
-        const profile = await Profile.findById(req.params.uid).populate('user', ['name', 'avatar']);
-
-        if (!profile) {
-            return res.status(400).json({msg: 'There is no profile for this user'})
-        }
-
-        await Profile.deleteOne({_id: req.params.uid})
-        res.send(profile);
+        // @todo - remove users posts
+        // remove profile
+        const user = await User.findOne({_id: req.user.id})
+        await Profile.findOneAndRemove({user: req.user.id})
+        
+        // remove user
+        await User.findOneAndRemove({_id: req.user.id})
+        res.json({msg: `User with the name: ${user.name} and email ${user.email} removed.`})
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).send("Server Error");
     }
-    catch (err) {
-        console.log(err);
-        if (err.kind == 'ObjectId') {
-            return res.status(400).json({msg: 'There is no profile for this user'})
-        }
-        res.status(400).json({msg: 'There is no profile with this ID.'})
-    }
+
+    // try {
+    //     const profile = await Profile.findById(req.params.uid).populate('user', ['name', 'avatar']);
+
+    //     if (!profile) {
+    //         return res.status(400).json({msg: 'There is no profile for this user'})
+    //     }
+
+    //     await Profile.deleteOne({_id: req.params.uid})
+    //     res.send(profile);
+    // }
+    // catch (err) {
+    //     console.log(err);
+    //     if (err.kind == 'ObjectId') {
+    //         return res.status(400).json({msg: 'There is no profile for this user'})
+    //     }
+    //     res.status(400).json({msg: 'There is no profile with this ID.'})
+    // }
   })
 
 module.exports = router;
