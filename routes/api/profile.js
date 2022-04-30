@@ -217,9 +217,9 @@ router.delete('/experience', auth, async (req, res) => {
         // remove profile
         const profile = await Profile.findOne({user: req.user.id});
         console.log(profile);
-        profile.experience.splice(profile.experience.findIndex(function(i){
-            return i._id === req.body.id;
-        }), 1);
+        profile.experience.findIndex(function(i) { if (i.id == req.id) {
+            profile.experience.shift(i)
+        }});
         profile.save();
         res.json(profile);
     } catch(err) {
