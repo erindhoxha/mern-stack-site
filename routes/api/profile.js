@@ -178,15 +178,29 @@ router.put('/experience', [auth, [
     body('title').not().isEmpty().withMessage("Title is required"),
     body('company').not().isEmpty().withMessage("Company is required"),
     body('from').not().isEmpty().withMessage("Date from is required"),
-]], (req, res) => {
+]], async (req, res) => {
     
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
         }
-        res.send("We will update the profile here.!!");
-        console.log(req.body);
+        const { title, company, from, to, current, description } = req.body;
+
+        const newExp = {
+            title: title,
+            company: company,
+            from: from,
+            to: to,
+            current: current,
+            description: description
+        }
+
+        const profile = await Profile.findOne({user: req.user.id});
+        profile.experience.unshift(newExp);
+        await profile.save();
+        res.json(profile);
+
     } catch(err) {
         console.error(err.message);
         res.status(500).send("Server Error");
