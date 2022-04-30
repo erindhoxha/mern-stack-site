@@ -216,10 +216,9 @@ router.delete('/experience', auth, async (req, res) => {
         // @todo - remove users posts
         // remove profile
         const profile = await Profile.findOne({user: req.user.id});
-        console.log(profile);
-        profile.experience.findIndex(function(i) { if (i.id == req.id) {
-            profile.experience.shift(i)
-        }});
+        profile.experience.filter(x => {
+            return x._id.toString() != req.body.id;
+        })
         profile.save();
         res.json(profile);
     } catch(err) {
