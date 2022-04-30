@@ -25,7 +25,6 @@ router.get('/me', auth, async (req, res) => {
 // @route       POST api/profile
 // @desc        Create or update user profile
 // @access      Private
-
 router.post('/', [auth, [
     body('status').not().isEmpty(),
     body('skills').not().isEmpty(),
@@ -109,19 +108,45 @@ router.get('/all', async (req, res) => {
     // });
 });
 
-
 // @route       GET api/profile/id
 // @desc        Get a profile by ID
 // @access      Public
 router.get('/:uid', async (req, res) => {
     try {
         const profile = await Profile.findById(req.params.uid).populate('user', ['name', 'avatar']);
+
+        if (!profile) {
+            return res.status(400).json({msg: 'There is no profile for this user'})
+        }
         res.send(profile);
     }
     catch (err) {
         console.log(err);
-        res.status(400).json({msg: 'There is no profile for this user.'})
+        if (err.kind == 'ObjectId') {
+            return res.status(400).json({msg: 'There is no profile for this user'})
+        }
+        res.status(400).json({msg: 'There is no profile with this ID.'})
     }
 });
+
+router.delete('/:uid', async (req, res) => {
+    try {
+        const profile = await Profile.findById(req.params.uid).populate('user', ['name', 'avatar']);
+
+        if (!profile) {
+            return res.status(400).json({msg: 'There is no profile for this user'})
+        }
+
+        await Profile.deleteOne({_id: req.params.uid})
+        res.send(profile);
+    }
+    catch (err) {
+        console.log(err);
+        if (err.kind == 'ObjectId') {
+            return res.status(400).json({msg: 'There is no profile for this user'})
+        }
+        res.status(400).json({msg: 'There is no profile with this ID.'})
+    }
+  })
 
 module.exports = router;
