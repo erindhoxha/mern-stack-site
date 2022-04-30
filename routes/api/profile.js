@@ -171,8 +171,8 @@ router.delete('/', auth, async (req, res) => {
 
 
 
-// @route       update api/profile/id
-// @desc        update a profile by ID / add profile experience
+// @route       update api/profile/experience
+// @desc        update a profile by experience / add profile experience
 // @access      Private
 router.put('/experience', [auth, [
     body('title').not().isEmpty().withMessage("Title is required"),
@@ -206,5 +206,26 @@ router.put('/experience', [auth, [
         res.status(500).send("Server Error");
     }
 })
+
+
+// @route       Delete api/profile/experience
+// @desc        Delete a profiles experience / add profile experience
+// @access      Private
+router.delete('/experience', auth, async (req, res) => {
+    try {
+        // @todo - remove users posts
+        // remove profile
+        const profile = await Profile.findOne({user: req.user.id});
+        console.log(profile);
+        profile.experience.splice(profile.experience.findIndex(function(i){
+            return i._id === req.body.id;
+        }), 1);
+        profile.save();
+        res.json(profile);
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).send("Server Error");
+    }
+  })
 
 module.exports = router;
