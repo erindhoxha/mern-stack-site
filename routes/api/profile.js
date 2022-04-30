@@ -171,7 +171,7 @@ router.delete('/', auth, async (req, res) => {
 // @route       update api/profile/id
 // @desc        update a profile by ID / add profile experience
 // @access      Private
-router.put('/', (req, res) => {
+router.put('/experience', auth, (req, res) => {
     res.send("We will update the profile here.!!");
 })
 
