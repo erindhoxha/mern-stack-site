@@ -205,7 +205,7 @@ router.put('/experience', [auth, [
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-})
+});
 
 
 // @route       Delete api/profile/experience
@@ -226,6 +226,65 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         console.log(err.message);
         res.status(500).send("Server Error");
     }
-  })
+});
+
+
+// @route       update api/profile/education
+// @desc        update a profile by education / add profile education
+// @access      Private
+router.put('/education', [auth, [
+    body('school').not().isEmpty().withMessage("School is required"),
+    body('degree').not().isEmpty().withMessage("Degree is required"),
+    body('fieldofstudy').not().isEmpty().withMessage("Field of study is required"),
+    body('from').not().isEmpty().withMessage("From date is required"),
+]], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+
+        const newEdu = {
+            school: school,
+            degree: degree,
+            fieldofstudy: fieldofstudy,
+            from: from,
+            to: to,
+            current: current,
+            description: description,
+        }
+
+        const profile = await Profile.findOne({user: req.user.id});
+        profile.education.unshift(newEdu);
+        await profile.save();
+        res.json(profile);
+
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+
+// @route       Delete api/profile/education
+// @desc        Delete a profiles education / add profile education
+// @access      Private
+router.delete('/education/:edu_id', auth, async (req, res) => {
+    try {
+        // @todo - remove users posts
+        // remove profile
+        const profile = await Profile.findOne({user: req.user.id});
+        profile.education = profile.education.filter(x => {
+            return x._id.toString() != req.params.edu_id;
+        })
+        console.log(profile);
+        profile.save();
+        res.json(profile);
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).send("Server Error");
+    }
+});
 
 module.exports = router;
