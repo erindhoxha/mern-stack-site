@@ -216,11 +216,13 @@ router.delete('/experience', auth, async (req, res) => {
         // @todo - remove users posts
         // remove profile
         const profile = await Profile.findOne({user: req.user.id});
-        profile.experience.filter(x => {
+        console.log(profile);
+        profile.experience = profile.experience.filter(x => {
             return x._id.toString() != req.body.id;
         })
+        console.log(profile);
         profile.save();
-        res.json(profile);
+        res.json(profile.experience);
     } catch(err) {
         console.log(err.message);
         res.status(500).send("Server Error");
