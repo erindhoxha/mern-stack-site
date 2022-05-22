@@ -46,7 +46,9 @@ router.post('/', [ auth, [
 // @access      Public
 router.get('/', async (req, res) => {
     try {
-        res.send("Getting posts!");
+        Post.find({}, (err, posts) => {
+            res.send(posts);
+        });
     } catch(err) {
         console.log(err.message);
         res.status(500).send("Server error");
