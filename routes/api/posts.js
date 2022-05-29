@@ -46,9 +46,23 @@ router.post('/', [ auth, [
 // @access      Public
 router.get('/', async (req, res) => {
     try {
-        Post.find({}, (err, posts) => {
+        const posts = Post.find({}).sort('-date').exec((err, posts) => {
             res.send(posts);
         });
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+// @route       GET api/posts:id
+// @desc        Get post by id
+// @access      Private
+router.get('/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        console.log(post);
+        res.send(post);
     } catch(err) {
         console.log(err.message);
         res.status(500).send("Server error");
