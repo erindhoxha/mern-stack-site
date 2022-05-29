@@ -109,7 +109,6 @@ router.put('/like/:id', auth, async(req, res) => {
             // not been liked                   
         }
         await post.save();
-
         res.json(post.likes);
     } catch(err) {
         res.status(500).send("Server error");
