@@ -117,6 +117,33 @@ router.put('/like/:id', auth, async(req, res) => {
     } catch(err) {
         res.status(500).send("Server error");
     }
+
+    // AN EXAMPLE FROM WILL FROM UDEMY
+
+    // router.put('/like/:id', auth, async (req, res) => {
+    //     try {
+    //       const post = await Post.findById(req.params.id);
+       
+    //       // Check if the post has already been liked
+    //       if (post.likes.some((like) => like.user.toString() === req.user.id)) {
+    //         // If it has remove the like
+    //         post.likes = post.likes.filter(
+    //           ({ user }) => user.toString() !== req.user.id
+    //         );
+    //       } else {
+    //         // else add a new like
+    //         post.likes.unshift({ user: req.user.id });
+    //       }
+       
+    //       await post.save();
+       
+    //       return res.json(post.likes);
+    //     } catch (err) {
+    //       console.error(err.message);
+    //       res.status(500).send('Server Error');
+    //     }
+    //   });
+    
 })
 
 // @route       POST api/posts/comment/:id
