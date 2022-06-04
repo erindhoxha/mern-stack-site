@@ -95,6 +95,10 @@ router.delete('/:id', auth, async (req, res) => {
     }
 })
 
+// @route       PUT api/like/:id
+// @desc        Like a post
+// @access      Private
+
 router.put('/like/:id', auth, async(req, res) => {
     try {
         const post = await Post.findById(req.params.id);
@@ -115,6 +119,36 @@ router.put('/like/:id', auth, async(req, res) => {
     }
 })
 
+// @route       POST api/posts/comment/:id
+// @desc        Post a comment
+// @access      Private
 
+router.post('/comment/:id', [auth, [
+    body('text').not().isEmpty(),
+]], async(req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({msg: errors.array()})
+    }
+
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        const post = await Post.findById(req.params.id);
+    
+        const newComment = {
+            text: req.body.text,
+            user: req.user.id,
+            avatar: user.avatar,
+            name: user.name
+        }
+        console.log(post);
+        post.comments.unshift(newComment);
+        post.save();
+        res.json(post);
+    } catch (error) {
+        res.status(500).send("Server error");
+    }
+})
 
 module.exports = router;
