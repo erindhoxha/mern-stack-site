@@ -144,11 +144,41 @@ router.post('/comment/:id', [auth, [
         }
         console.log(post);
         post.comments.unshift(newComment);
-        post.save();
+        await post.save();
         res.json(post);
     } catch (error) {
         res.status(500).send("Server error");
     }
 })
 
+// @route       DELETE api/posts/comment/:id/:comment_id
+// @desc        Delete a comment
+// @access      Private
+
+router.delete("/comment/:post_id/:comment_id", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+
+        // Pull out comment from the post
+        const comment = post.comments.find(comment => comment.id === req.params.comment_id);
+
+        // Make sure comment exists
+        if (!comment) {
+            return res.status(404).json({msg: "Comment not found"})
+        }
+
+        // Check user
+        if (comment.user.toString() !== req.user.id) {
+            return res.status(401).json({msg: "User not authorised"})
+        }
+
+        const removeIndex = post.comments.map(comment => comment.user.toString()).indexOf(req.user.id);
+        await post.comments.splice(removeIndex, 1);
+        await post.save();
+        res.json(post.comments);
+
+    } catch (error) {
+        res.status(500).send("Server error");  
+    }
+})
 module.exports = router;
