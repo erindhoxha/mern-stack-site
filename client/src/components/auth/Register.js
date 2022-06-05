@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -12,15 +13,36 @@ const Register = () => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
         if (password !== password2) {
             // Dont submit
             console.error("Passwords don't match");
         } else {
-            console.log(formData);
+            // It's passing the data
+            const newUser = {
+                name,
+                email,
+                password,
+                password2
+            }
+            try {
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+    
+                const body = JSON.stringify(newUser);
+    
+                const res = await axios.post('/api/users', body, config);
+    
+                console.log(res.data);
+    
+            } catch (err) {
+                console.error(err.response.data);
+            }
         }
-        // It's passing the data
     }
 
     return (
