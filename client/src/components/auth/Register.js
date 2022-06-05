@@ -14,7 +14,12 @@ const Register = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        console.log(formData);
+        if (password !== password2) {
+            // Dont submit
+            console.error("Passwords don't match");
+        } else {
+            console.log(formData);
+        }
         // It's passing the data
     }
 
