@@ -3,8 +3,10 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types'
+import Alert from '../layout/Alert';
 
-const Register = () => {
+const Register = (props) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -12,6 +14,7 @@ const Register = () => {
         password2: ''
     });
 
+    const { setAlert } = props;
     const { name, email, password, password2 } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -20,7 +23,7 @@ const Register = () => {
         e.preventDefault();
         if (password !== password2) {
             // Dont submit
-            console.error("Passwords don't match");
+            setAlert("Passwords don't match", "danger");
         } else {
             // It's passing the data
             const newUser = {
@@ -50,6 +53,7 @@ const Register = () => {
 
     return (
         <Fragment>
+            <Alert />
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={e => onSubmit(e)}>
@@ -94,6 +98,10 @@ const Register = () => {
             </p>
         </Fragment>
     )
+}
+
+Register.propTypes = {
+    setAlert: PropTypes.func.isRequired
 }
 
 export default connect(null, { setAlert })(Register);
