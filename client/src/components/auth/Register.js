@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -94,4 +96,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default connect(null, { setAlert })(Register);
